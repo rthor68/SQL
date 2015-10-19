@@ -1,0 +1,52 @@
+--Create a table that holds all the fields we are going to count
+  --and compare
+  DROP TABLE CL_CM_COMPARISON_FIELDS;
+  CREATE TABLE CL_CM_COMPARISON_FIELDS 
+    AS
+    -- SELECT statement pulls the indicator fields from CLDR_V_APR_01 and CM_APRIL_01
+  SELECT CL.Task_Assay CM_Task_Assay
+    , CM.Task_ASSAY CL_Task_Assay
+    , CL.F_ACCN CL_ACCN
+    , CM.F_ACCN CM_ACCN
+    , CL.ORDER_MNEMONIC CL_ORDER_NAME
+    , CM.ORDER_MNEMONIC CM_ORDER_NAME
+    , CL.TEST_SITE CL_TEST_SITE
+    , CM.TEST_SITE CM_TEST_SITE
+    , CL.VERIFIED_BY CL_V_BY
+    , CM.VERIFIED_BY CM_V_BY
+    , CL.VERIFIED_RESULT_DT_TM CL_V_RESULT_DT_TM
+    , CM.VERIFIED_DT_TM CM_V_RESULT_DT_TM
+    
+    --2 fields below may not refer to the same "location"
+    , CL.PAT_COLL_LOC_NAME_UNIT CL_COLL_LOC
+    , CM.COLL_LOC_NAME CM_COLL_LOC
+    
+    , CL.COLLECTED_BY CL_COLL_BY
+    , CM.COLLECTED_BY CM_COLL_BY
+    , CL.COLLECTION_DT_TM CL_COL_DT_TM
+    , CM.COLLECTION_DT_TM CM_COLL_DT_TM
+    , CM.SECT
+    
+   FROM CLDR_V_APR_01 CL 
+   FULL JOIN CM_APRIL_01 CM ON CL.Task_Assay = CM.Task_ASSAY
+   AND CM.F_ACCN = CL.F_ACCN AND CM.ORDER_MNEMONIC = CL.ORDER_MNEMONIC
+   --AND CL.VERIFIED_BY = CM.VERIFIED_BY
+   --WHERE CM.SECT = 'General Lab'
+  
+   -- Statements below look for content differences in the "indicator fields"
+  AND (
+   (CL.TASK_ASSAY <> CM.Task_Assay)
+  OR (CL.F_ACCN <> CM.F_ACCN)
+  OR (CL.ORDER_MNEMONIC <> CM.ORDER_MNEMONIC)
+  OR (CL.TEST_SITE <> CM.TEST_SITE)
+  --OR (CL.VERIFIED_BY <> CM.VERIFIED_BY)
+  --OR (CL.VERIFIED_RESULT_DT_TM <> CM.VERIFIED_DT_TM)
+  
+  -- Comparison below creates over 300K discrepancies
+  --OR (CL.PAT_COLL_LOC_NAME_UNIT <> CM.COLL_LOC_NAME)
+  
+  --OR (CL.COLLECTED_BY <> CM.COLLECTED_BY)
+  --OR (CL.COLLECTION_DT_TM <> CM.COLLECTION_DT_TM
+   )
+  -- )
+   ;Enter file contents here
