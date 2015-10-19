@@ -1,0 +1,17 @@
+SELECT CL_ACCN ACCN
+   , CL_Task_Assay
+   , CM_TASK_ASSAY
+   , SECT
+    ,Count (DISTINCT CL_ACCN) Count_TA_CL
+    ,Count (DISTINCT CM_ACCN) Count_TA_CM
+    , CL_Order_Name
+    , CM_Order_Name
+    , CM_TEST_SITE
+    , CL_TEST_SITE
+    , Count (DISTINCT CL_Order_Name) Count_ORDNM_CL
+    , Count (DISTINCT CM_Order_Name) Count_ORDNM_CM
+    FROM CL_CM_COMPARISON_FIELDS
+    Where SECT = 'General Lab'
+   group by CL_Task_Assay, CM_TASK_ASSAY, 
+   SECT, CL_Order_Name, CM_Order_Name, CM_TEST_SITE, CL_TEST_SITE, CL_ACCN 
+    HAVING Count (DISTINCT CL_TEST_SITE) <> Count (DISTINCT CM_TEST_SITE);Enter file contents here
